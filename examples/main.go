@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"abhai.dev/scheduler"
+	"github.com/abhaikollara/scheduler"
 )
 
 func main() {
