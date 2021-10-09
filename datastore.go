@@ -1,4 +1,4 @@
-package main
+package scheduler
 
 import "time"
 
@@ -37,9 +37,9 @@ func (s *InMemoryStore) GetTasksFor(t time.Time) ([]Task, error) {
 	return scheduledTasks, nil
 }
 
-func NewInMemoryStore() (*InMemoryStore, error) {
+func NewInMemoryStore() *InMemoryStore {
 	ms := InMemoryStore{}
 	ms.store = make(map[int64][]Task)
 
-	return &ms, nil
+	return &ms
 }

@@ -1,6 +1,9 @@
-package main
+package scheduler
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -10,9 +13,31 @@ type Task interface {
 	Execute() error
 }
 
+type PrintTask struct {
+	ScheduledAt time.Time
+	Message     string
+}
+
+func NewPrintTask(t time.Time, message string) PrintTask {
+	return PrintTask{ScheduledAt: t, Message: message}
+}
+
+func (t PrintTask) GetScheduleTime() time.Time {
+	return t.ScheduledAt
+}
+
+func (t PrintTask) Execute() error {
+	fmt.Printf("%s: %v\n", t.Message, t.GetScheduleTime())
+	return nil
+}
+
 type HTTPRequestTask struct {
 	ScheduledAt time.Time
 	Request     *http.Request
+}
+
+func NewHTTPRequestTask(t time.Time, req *http.Request) HTTPRequestTask {
+	return HTTPRequestTask{ScheduledAt: t, Request: req}
 }
 
 func (t HTTPRequestTask) GetScheduleTime() time.Time {
@@ -28,4 +53,9 @@ func (t HTTPRequestTask) Execute() error {
 	}
 
 	return nil
+}
+
+func NewHTTPPostTask(t time.Time, payload json.RawMessage, url string) HTTPRequestTask {
+	req, _ := http.NewRequest("POST", url, bytes.NewReader(payload))
+	return NewHTTPRequestTask(t, req)
 }

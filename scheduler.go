@@ -1,4 +1,4 @@
-package main
+package scheduler
 
 import (
 	"net/http"
@@ -10,35 +10,30 @@ type Scheduler interface {
 	Schedule(time.Time, *http.Request) error
 }
 
-type VanillaScheduler struct {
+type SimpleScheduler struct {
 	taskStore TaskStore
 }
 
-func (s *VanillaScheduler) Schedule(t time.Time, req *http.Request) error {
-	var err error
+func (s *SimpleScheduler) Schedule(task Task) error {
+	return s.taskStore.SaveTask(task)
 
-	task := HTTPRequestTask{ScheduledAt: t, Request: req}
-	s.taskStore.SaveTask(task)
-
-	return err
 }
 
-func (s *VanillaScheduler) Start() error {
+func (s *SimpleScheduler) Start() error {
 	var ticker = time.NewTicker(time.Second)
 	for {
 		t := <-ticker.C
-		taskList, _ := s.taskStore.GetTasksFor(t)
+		go func() {
+			taskList, _ := s.taskStore.GetTasksFor(t)
 
-		for _, task := range taskList {
-			go task.Execute()
-		}
+			for _, task := range taskList {
+				go task.Execute()
+			}
+		}()
+
 	}
 }
 
-func NewVanillaScheduler(taskStore *TaskStore) (VanillaScheduler, error) {
-	var s VanillaScheduler
-
-	s.taskStore = *taskStore
-
-	return s, nil
+func NewSimpleScheduler(taskStore TaskStore) SimpleScheduler {
+	return SimpleScheduler{taskStore: taskStore}
 }
