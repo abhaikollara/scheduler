@@ -1,13 +1,12 @@
 package scheduler
 
 import (
-	"net/http"
 	"time"
 )
 
 type Scheduler interface {
 	Start() error
-	Schedule(time.Time, *http.Request) error
+	Schedule(time.Time, Task) error
 }
 
 type SimpleScheduler struct {
