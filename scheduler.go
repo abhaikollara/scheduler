@@ -14,8 +14,16 @@ type SimpleScheduler struct {
 	taskStore TaskStore
 }
 
-func (s *SimpleScheduler) Schedule(task Task) error {
-	return s.taskStore.SaveTask(task)
+func (s *SimpleScheduler) Schedule(tasks ...Task) error {
+	var err error
+	for _, t := range tasks {
+		err = s.taskStore.SaveTask(t)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 
 }
 
