@@ -34,6 +34,6 @@ func (s *SimpleScheduler) Start() error {
 	}
 }
 
-func NewSimpleScheduler(taskStore TaskStore) SimpleScheduler {
-	return SimpleScheduler{taskStore: taskStore}
+func NewSimpleScheduler() SimpleScheduler {
+	return SimpleScheduler{taskStore: NewInMemoryStore()}
 }

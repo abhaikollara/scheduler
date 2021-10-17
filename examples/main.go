@@ -7,8 +7,7 @@ import (
 )
 
 func main() {
-	ts := scheduler.NewInMemoryStore()
-	s := scheduler.NewSimpleScheduler(ts)
+	s := scheduler.NewSimpleScheduler()
 
 	t1 := scheduler.NewPrintTask(time.Now().Add(time.Second*1), "lorem")
 	t2 := scheduler.NewPrintTask(time.Now().Add(time.Second*2), "ipsum")
