@@ -27,7 +27,7 @@ func (t PrintTask) GetScheduleTime() time.Time {
 }
 
 func (t PrintTask) Execute() error {
-	fmt.Printf("%s: %v\n", t.Message, t.GetScheduleTime())
+	fmt.Println(t.Message)
 	return nil
 }
 
