@@ -18,6 +18,7 @@ type PrintTask struct {
 	Message     string
 }
 
+// Creates a task that prints a given message to stdout at the given time
 func NewPrintTask(t time.Time, message string) PrintTask {
 	return PrintTask{ScheduledAt: t, Message: message}
 }
@@ -36,6 +37,7 @@ type HTTPRequestTask struct {
 	Request     *http.Request
 }
 
+// NewHTTPRequestTask create a task that executes a given http request at the given time
 func NewHTTPRequestTask(t time.Time, req *http.Request) HTTPRequestTask {
 	return HTTPRequestTask{ScheduledAt: t, Request: req}
 }
@@ -55,6 +57,7 @@ func (t HTTPRequestTask) Execute() error {
 	return nil
 }
 
+// NewHTTPPostTask creates a HTTPRequestTask that sends a given payload to a given URL
 func NewHTTPPostTask(t time.Time, payload json.RawMessage, url string) HTTPRequestTask {
 	req, _ := http.NewRequest("POST", url, bytes.NewReader(payload))
 	return NewHTTPRequestTask(t, req)
